@@ -20,14 +20,14 @@ if (!empty($nama) && !empty($email) && !empty($password)) {
     $result = $stmt->get_result();
 
     if ($result->num_rows > 0) {
-        echo "<script>alert('Email is already registered. Please use another email.');</script>";
+        echo "<script>alert('Email is already registered. Please use another email!');</script>";
     } else {
         $hashed_password = password_hash($password, PASSWORD_DEFAULT);
         $stmt = $conn->prepare("INSERT INTO user (nama, email, password) VALUES (?, ?, ?)");
         $stmt->bind_param("sss", $nama, $email, $hashed_password);
         
         if ($stmt->execute()) {
-            echo "<script>alert('Account successfully registered! Please login to your account'); window.location.href='../login/login.php';</script>";
+            echo "<script>alert('Account successfully registered. Please login to your account!'); window.location.href='../login/login.php';</script>";
         } else {
             echo "Error: " . $stmt->error;
         }
