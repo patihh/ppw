@@ -16,14 +16,12 @@ $recaptcha_response = isset($_POST['g-recaptcha-response']) ? $_POST['g-recaptch
 
 if (!empty($email) && !empty($password)) {
     if (!empty($recaptcha_response)) {
-        // Verify reCAPTCHA
-        $secret_key = "6Lf9ZG0qAAAAANrebi38cpef44RqCxyQ4WHzs-Ih"; // Replace with your secret key from Google
+        $secret_key = "6Lf9ZG0qAAAAANrebi38cpef44RqCxyQ4WHzs-Ih";
         $verify_url = "https://www.google.com/recaptcha/api/siteverify";
         $response = file_get_contents($verify_url . "?secret=" . $secret_key . "&response=" . $recaptcha_response);
         $response_keys = json_decode($response, true);
 
         if ($response_keys["success"]) {
-            // reCAPTCHA was successful, proceed with login
             $stmt = $conn->prepare("SELECT password FROM user WHERE email = ?");
             $stmt->bind_param("s", $email);
             $stmt->execute();
@@ -38,17 +36,17 @@ if (!empty($email) && !empty($password)) {
                     header("Location: ../beranda/beranda.html");
                     exit();
                 } else {
-                    echo "<script>alert('Incorrect password. Please try again.');</script>";
+                    echo "<script>alert('Incorrect password. Please try again!');</script>";
                 }
             } else {
-                echo "<script>alert('Email not found. Please register first.');</script>";
+                echo "<script>alert('Email not found. Please register first!');</script>";
             }
             $stmt->close();
         } else {
-            echo "<script>alert('reCAPTCHA verification failed. Please try again.');</script>";
+            echo "<script>alert('reCAPTCHA verification failed. Please try again!');</script>";
         }
     } else {
-        echo "<script>alert('Please complete the reCAPTCHA.');</script>";
+        echo "<script>alert('Please complete the reCAPTCHA!');</script>";
     }
 }
 
@@ -62,7 +60,7 @@ $conn->close();
     <title>E-Commerce | Login</title>
     <link rel="stylesheet" href="style_login.css">
     <link rel="icon" type="image/x-icon" href="https://clubmate.fish/wp-content/uploads/2021/06/eCommerce-Icon-1.png">
-    <script src="https://www.google.com/recaptcha/api.js" async defer></script> <!-- Add this line -->
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 </head>
 <body>
     <header>
@@ -94,7 +92,7 @@ $conn->close();
                     <input type="checkbox" id="remember" name="remember">
                     <label for="remember">Remember me</label>
                 </div>
-                <div class="g-recaptcha" data-sitekey="6Lf9ZG0qAAAAAMeMJRZzqnnFRp-QP44udJghl6c9"></div> <!-- Add this line -->
+                <div class="g-recaptcha" data-sitekey="6Lf9ZG0qAAAAAMeMJRZzqnnFRp-QP44udJghl6c9"></div>
                 <div class="input-group">
                     <button type="submit" name="login" class="btn-login">Log In</button>
                 </div>
