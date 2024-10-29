@@ -1,5 +1,21 @@
 <?php
 session_start();
+require_once 'vendor/autoload.php';
+
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
+$dotenv->load();
+
+$clientID = $_ENV['GOOGLE_CLIENT_ID'];
+$clientSecret = $_ENV['GOOGLE_CLIENT_SECRET'];
+$redirectUri = 'http://localhost/web%205/beranda/beranda.html';
+
+$client = new Google_Client();
+$client->setClientId($clientID);
+$client->setClientSecret($clientSecret);
+$client->setRedirectUri($redirectUri);
+$client->addScope("email");
+$client->addScope("profile");
+
 $servername = "localhost";
 $username = "root";
 $password = "";
@@ -8,6 +24,38 @@ $dbname = "data";
 $conn = new mysqli($servername, $username, $password, $dbname);
 if ($conn->connect_error) {
     die("Connection Error: " . $conn->connect_error);
+}
+
+if (isset($_GET['code'])) {
+    $token = $client->fetchAccessTokenWithAuthCode($_GET['code']);
+    
+    if (!isset($token['error'])) { 
+        $client->setAccessToken($token['access_token']);
+
+        $google_oauth = new Google_Service_Oauth2($client);
+        $google_account_info = $google_oauth->userinfo->get();
+        $email = $google_account_info->email;
+        $name = $google_account_info->name;
+
+        $stmt = $conn->prepare("SELECT * FROM user WHERE email = ?");
+        $stmt->bind_param("s", $email);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        if ($result->num_rows == 0) {
+            $stmt = $conn->prepare("INSERT INTO user (email, name) VALUES (?, ?)");
+            $stmt->bind_param("ss", $email, $name);
+            $stmt->execute();
+        }
+
+        $_SESSION['email'] = $email;
+        $_SESSION['name'] = $name;
+
+        header("Location: ../beranda/beranda.html");
+        exit();
+    } else {
+        echo "<script>alert('Error fetching token: " . $token['error'] . "');</script>";
+    }
 }
 
 $email = isset($_POST['email']) ? $_POST['email'] : '';
@@ -32,7 +80,7 @@ if (!empty($email) && !empty($password)) {
                 $hashed_password = $row['password'];
 
                 if (password_verify($password, $hashed_password)) {
-                    echo "<script>alert('Login successful!');</script>";
+                    $_SESSION['email'] = $email;
                     header("Location: ../beranda/beranda.html");
                     exit();
                 } else {
@@ -98,6 +146,14 @@ $conn->close();
                 </div>
                 <div class="input-group">
                     <p class="signup-text">Don't have an account? <a href="../register/register.php">Sign Up</a></p>
+                </div>
+                <div class="separator">
+                    <span>or login with</span>
+                </div>
+                <div>
+                    <a href="<?php echo $client->createAuthUrl() ?>" class="btn-google">
+                        Google
+                    </a>
                 </div>
             </form>
         </div>
