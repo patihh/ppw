@@ -11,10 +11,7 @@ body {
     justify-content: center;
     align-items: center;
     min-height: 100vh;
-    background-image: url('[ampersand]width=1200[ampersand]height=740');
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
+    background: linear-gradient(to bottom, #e0f7fa, #ffffff);
 }
 
 header {
