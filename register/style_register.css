@@ -11,7 +11,7 @@ body {
     justify-content: center;
     align-items: center;
     min-height: 100vh;
-    background: linear-gradient(to bottom, #e0f7fa, #ffffff);
+    background-color: whitesmoke;
 }
 
 header {
