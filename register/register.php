@@ -39,7 +39,7 @@ $conn->close();
 
 <!DOCTYPE html>
 <head>
-    <link rel="icon" type="image/png" href="https://clubmate.fish/wp-content/uploads/2021/06/eCommerce-Icon-1.png">
+    <link rel="icon" type="image/x-icon" href="icon.png">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>E-Commerce | Register</title>
@@ -50,7 +50,7 @@ $conn->close();
     <header>
         <div class="header-left">
             <a href="">
-                <img src="https://clubmate.fish/wp-content/uploads/2021/06/eCommerce-Icon-1.png" alt="e-commerce logo">
+                <img src="logo.jpg" alt="e-commerce logo">
             </a>
         </div>
         <div class="header-center"></div>
